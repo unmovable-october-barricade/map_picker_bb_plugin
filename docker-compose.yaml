@@ -1,0 +1,25 @@
+version: "3"
+services:
+  budibase:
+    restart: unless-stopped
+    image: budibase/budibase:latest
+    ports:
+      - 10001:80
+    environment:
+      API_ENCRYPTION_KEY: DohgupzPgJtK6vmvsv7B4czNvDCkbzCK
+      JWT_SECRET: H0xc1Knpp6mAdjxtf8k2ftfdsS0YX3rk
+      MINIO_ACCESS_KEY: Fd70IORX1bfFVITDTIzPyeoovU9X3wQB
+      MINIO_SECRET_KEY: 5XPUX64U0Q231MO45iHyz2XJGcjo2SFT
+      REDIS_PASSWORD: 0QColYbai8tRnE9DpZuCh6kO07TPSF38
+      INTERNAL_API_KEY: pv2qDLKyliMJtV4TPbaOpSGm3xPdily2
+      COUCHDB_USER: admin
+      COUCHDB_PASSWORD: NwpgxbdmBmFN3heIJ33ypxOzPvQZqgWX
+      PLUGINS_DIR: /plugins
+      BB_ADMIN_USER_EMAIL: admin@admin.com
+      BB_ADMIN_USER_PASSWORD: admin
+    volumes:
+      - budibase_data:/data
+      - C:\Data\LG\budibase\map_picker:/plugins
+volumes:
+  budibase_data:
+    driver: local

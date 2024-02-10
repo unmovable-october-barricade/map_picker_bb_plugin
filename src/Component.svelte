@@ -13,28 +13,20 @@
 
   initMapControls();
 
-  export let dataProvider;
   export let error;
   export let zoomLevel;
   export let zoomEnabled = true;
-  export let latitudeKey = null;
-  export let longitudeKey = null;
-  export let titleKey = null;
   export let fullScreenEnabled = true;
+  export let popupText = "Current Selection";
   export let locationEnabled = true;
   export let showLayerControlEnabled = false;
   export let defaultLocation;
   export let tileURL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
   export let mapAttribution;
-  export let creationEnabled = false;
-  export let onClickMarker;
-  export let onCreateMarker;
+  export let onLocationPicked;
   export let markerIcon;
   export let colorIcon;
   export let customIconOptions;
-  export let customKeyField;
-  export let customizationBoolean;
-  export let iconType;
   export let tileMultipleURL;
 
   const { styleable, notificationStore } = getContext("sdk");
@@ -132,7 +124,6 @@
   let cachedDeviceCoordinates;
   let layerGroups = {};
 
-  $: validRows = getValidRows(dataProvider?.rows, latitudeKey, longitudeKey);
   $: safeZoomLevel = parseZoomLevel(zoomLevel);
   $: defaultCoordinates = parseDefaultLocation(defaultLocation);
   $: initMap(tileURL, mapAttribution, safeZoomLevel);
@@ -144,20 +135,7 @@
   $: height = $component.styles.normal.height;
   $: width, height, mapInstance?.invalidateSize();
   $: defaultCoordinates, resetView();
-  $: addMapMarkers(
-    mapInstance,
-    validRows,
-    latitudeKey,
-    longitudeKey,
-    titleKey,
-    onClickMarker,
-    colorIcon,
-    defaultMarkerOptions,
-    customizationBoolean,
-    customKeyField,
-    iconType,
-    customIconOptions
-  );
+
 
   $: addMultipleTileLayers(mapInstance, tileMultipleURL);
   $: updateLayerGroup(showLayerControlEnabled);
@@ -473,33 +451,29 @@
   };
 
   const handleMapClick = (e) => {
-    if (!creationEnabled) {
-      return;
-    }
     candidateMarkerGroup.clearLayers();
     candidateMarkerPosition = [e.latlng.lat, e.latlng.lng];
     let candidateMarker = L.marker(candidateMarkerPosition, mapMarkerOptions);
     candidateMarker
-      .bindTooltip("New marker", {
+      .bindTooltip(popupText, {
         permanent: true,
         direction: "top",
         offset: [0, -25],
       })
       .addTo(candidateMarkerGroup)
       .on("click", clearCandidateMarker);
+      onCreateMarker(candidateMarkerPosition[0], candidateMarkerPosition[1]);
   };
 
-  const createMarker = async () => {
-    if (!onCreateMarker) {
+  const onCreateMarker = async (latitude, longitude) => {
+    if (!onLocationPicked) {
       return;
     }
-    const res = await onCreateMarker({
-      lat: candidateMarkerPosition[0],
-      lng: candidateMarkerPosition[1],
+    await onLocationPicked({
+      lat: latitude,
+      lng: longitude,
     });
-    if (res !== false) {
-      clearCandidateMarker();
-    }
+
   };
 
   const clearCandidateMarker = () => {

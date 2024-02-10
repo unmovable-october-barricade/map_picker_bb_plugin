@@ -2,68 +2,32 @@
   "type": "component",
   "metadata": {},
   "schema": {
-    "name": "customizable_leaflet_map",
-    "friendlyName": "customizable_leaflet_map",
-    "description": "A component which has the ability to add multiple layers, different icons as markers, and more",
+    "name": "map_picker",
+    "friendlyName": "map_picker",
+    "description": "A component that allows you to select a point on a map and receive its latitude/longitude.",
     "icon": "MapView",
     "settings": [
       {
-        "type": "dataProvider",
-        "label": "Provider",
-        "key": "dataProvider",
-        "required": true
-      },
-      {
-        "type": "field/string",
-        "label": "Latitude Key",
-        "key": "latitudeKey",
-        "required": true
-      },
-      {
-        "type": "field/string",
-        "label": "Longitude Key",
-        "key": "longitudeKey",
-        "required": true
-      },
-      {
-        "type": "field/string",
-        "label": "Title Key",
-        "key": "titleKey"
-      },
-      {
         "type": "event",
-        "label": "On Click Marker",
-        "key": "onClickMarker",
+        "label": "On New Location Picked",
+        "key": "onLocationPicked",
         "context": [
           {
-            "label": "Clicked marker",
-            "key": "marker"
-          }
-        ]
-      },
-      {
-        "type": "boolean",
-        "label": "Enable creating markers",
-        "key": "creationEnabled",
-        "defaultValue": false
-      },
-      {
-        "type": "event",
-        "label": "On Create Marker",
-        "key": "onCreateMarker",
-        "dependsOn": "creationEnabled",
-        "context": [
-          {
-            "label": "New marker latitude",
+            "label": "Selection latitude",
             "key": "lat"
           },
           {
-            "label": "New marker longitude",
+            "label": "Selection longitude",
             "key": "lng"
           }
         ]
+      },
+      {
+        "type": "text",
+        "label": "Selection Popup Text",
+        "key": "popupText",
+        "defaultValue": "Current Selection"
       }
-     
       ,
       {
         "type": "boolean",
